@@ -42,11 +42,12 @@ private:
   Tools tools;
   Eigen::MatrixXd R_laser_;
   Eigen::MatrixXd R_radar_;
+
   Eigen::MatrixXd H_laser_;
   Eigen::MatrixXd Hj_;
 
-  Eigen::MatrixXd Q_laser_;
-  Eigen::MatrixXd Q_radar_;
+  float noise_ax_;
+  float noise_ay_;
 };
 
 #endif /* FusionEKF_H_ */

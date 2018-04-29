@@ -34,6 +34,16 @@ public:
   */
   VectorXd MapCartToPolar(const VectorXd& x_state);
 
+  /**
+  * A helper method that calculates inverse of h(x').
+  */
+  VectorXd MapPolarToCart(const VectorXd& x_state);
+
+  /**
+  * A helper method that normalizes angles between -pi and pi.
+  */
+  double NormalizeAngle(double angle);
+
 };
 
 #endif /* TOOLS_H_ */

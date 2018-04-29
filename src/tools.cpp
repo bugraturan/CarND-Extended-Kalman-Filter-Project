@@ -13,8 +13,7 @@ Tools::~Tools() {}
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
   /**
-  TODO:
-    * Calculate the RMSE here.
+	* Calculate the RMSE here.
   */
  	VectorXd rmse(4);
 	rmse << 0,0,0,0;
@@ -51,7 +50,6 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
 
 MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	/**
-	TODO:
 	* Calculate a Jacobian here.
 	*/
 
@@ -82,6 +80,10 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 }
 
 VectorXd Tools::MapCartToPolar(const VectorXd& x_state) {
+	/*
+	This method maps the cart coordinates px, py, vx, and vy th rho, phi, and rho_dot
+	*/
+
 	float px = x_state(0);
 	float py = x_state(1);
 	float vx = x_state(2);
@@ -92,14 +94,53 @@ VectorXd Tools::MapCartToPolar(const VectorXd& x_state) {
 	float rho_dot=0;
 
 	rho=sqrt(px*px+py*py);
-	phi=std::atan2(py, px);
-	rho_dot=(px*vx+py*vy)/rho;
+	
 
-	VectorXd out = VectorXd(1, 3);
-
+	if (fabs(rho) < 0.0001) {
+		phi = 0;
+    	rho_dot = 0;
+  	} else {
+		phi=std::atan2(py, px);
+    	rho_dot=(px*vx+py*vy)/rho;
+	}
+	
+	VectorXd out = VectorXd(3);
 	out(0)=rho;
 	out(1)=phi;
 	out(2)=rho_dot;
 
 	return out;
  }
+
+VectorXd Tools::MapPolarToCart(const VectorXd& x_state) {
+	/*
+	This method maps the polar coordinates rho, phi, and rho_dot to px, py, vx=0, and vy=0
+	*/
+	float px = 0;
+	float py = 0;
+	float vx = 0;
+	float vy = 0;
+
+	float rho=x_state(0);
+	float phi=x_state(1);
+
+	px = rho * cos(phi);
+    py = rho * sin(phi);
+
+	VectorXd out = VectorXd(1, 4);
+
+	out(0)=px;
+	out(1)=py;
+	out(2)=vx;
+	out(3)=vy;
+
+	return out;
+ }
+
+double Tools::NormalizeAngle(double angle) {
+	/*
+	This method normalizes angles to be between -pi and pi
+	*/
+    double a = fmod(angle + M_PI, 2 * M_PI);
+    return a >= 0 ? (a - M_PI) : (a + M_PI);
+}
